@@ -19,7 +19,31 @@
  * 모든 폴더는 영어로 작성한다.
  * 오늘 배운 것을 정리하면서 앞으로 해야하는 것에 관하여 짧게 정리한다.
  * commit message는 "년_월_일"로 기록한다.
+ * .md파일을 한국어와 영어로 기록한다.
 
  * 계속 추가할 예정.
  
  ----------------------------------------------------------------
+
+# Today-I-Learned (En)
+ * The reason that I do TIL is to write the thing i learned today simply or detail.
+ 
+# Subject
+ *Subject focus on Programming but not limited in the programming only.
+ > Examples
+  > 1. Programming
+  > 2. The thing that I learned in Class
+  > 3. Philosophy
+  > 4. History
+  > 5. Etc
+
+# Rule
+ * Summary 3 things of TIL in syntax: [timeSequence]() by .md file.
+ * Save TIL in directory by Subject separately.
+ * If code exist, attach it.
+ * Every directory has to be written by English.
+ * When I organize the TIL, write the "Tomorrow what I will learn".
+ * Commit message is organized by this format "year_month_day".
+ * .md file is written Korean and English.
+
+ * To continue adding...
