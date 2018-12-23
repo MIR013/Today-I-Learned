@@ -13,7 +13,7 @@
   > 5. 기타
 # Rule
 
- * 오늘 배운 것을 syntax: [timeSequence]()폴더에 .md파일로 3줄 요약한다.
+ * 오늘 배운 것을 syntax: [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence)폴더에 .md파일로 3줄 요약한다.
  * 오늘 배운 것을 주제에 따라 폴더를 나누어 저장한다.
  * 오늘 배운 것에 코드가 있을 경우 첨부한다.
  * 모든 폴더는 영어로 작성한다.
@@ -38,7 +38,7 @@
   > 5. Etc
 
 # Rule
- * Summary 3 things of TIL in syntax: [timeSequence]() by .md file.
+ * Summary 3 things of TIL in syntax: [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence) by .md file.
  * Save TIL in directory by Subject separately.
  * If code exist, attach it.
  * Every directory has to be written by English.
