@@ -13,13 +13,14 @@
   > 5. 기타
 # Rule
 
- * 오늘 배운 것을 syntax: [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence)폴더에 .md파일로 3줄 요약한다.
+ * 오늘 배운 것을 [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence)폴더에 .md파일로 3줄 요약한다.
  * 오늘 배운 것을 주제에 따라 폴더를 나누어 저장한다.
  * 오늘 배운 것에 코드가 있을 경우 첨부한다.
  * 모든 폴더는 영어로 작성한다.
  * 오늘 배운 것을 정리하면서 앞으로 해야하는 것에 관하여 짧게 정리한다.
  * commit message는 "년_월_일"로 기록한다.
  * .md파일을 한국어와 영어로 기록한다.
+ * 영작시 사전에서 찾았던 단어는 voca.md에 기록한다.
 
  * 계속 추가할 예정.
  
@@ -38,12 +39,13 @@
   > 5. Etc
 
 # Rule
- * Summary 3 things of TIL in syntax: [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence) by .md file.
+ * Summary 3 things of TIL [timeSequence](https://github.com/MIR013/Today-I-Learned/tree/master/timeSequence) by .md file.
  * Save TIL in directory by Subject separately.
  * If code exist, attach it.
  * Every directory has to be written by English.
  * When I organize the TIL, write the "Tomorrow what I will learn".
  * Commit message is organized by this format "year_month_day".
  * .md file is written Korean and English.
+ * If I searched words, record them in voca.
 
  * To continue adding...
