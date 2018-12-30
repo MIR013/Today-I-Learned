@@ -28,3 +28,9 @@
  2018.12.29
  * ancient 고대의 
  * beginning 처음의
+-----------------------------------
+ 2018.12.30
+ * administration 행정, 관리
+ * thought 사상, 생각
+ * no need to 할 필요없다.
+ * judge 판단하다.
