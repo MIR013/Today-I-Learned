@@ -34,3 +34,7 @@
  * thought 사상, 생각
  * no need to 할 필요없다.
  * judge 판단하다.
+----------------------------------
+ 2018.12.31
+ * prejudice 편견
+ * first impression 첫인상
