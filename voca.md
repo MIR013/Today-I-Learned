@@ -38,3 +38,8 @@
  2018.12.31
  * prejudice 편견
  * first impression 첫인상
+-----------------------------------
+ 2019.01.02
+ * how to v 얼마나 v 한지
+ * implement 이행하다, 구현하다
+ * Joseon 조선
