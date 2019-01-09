@@ -52,3 +52,13 @@
 --------------------------------
  2019.01.08
  * fulfill 수행하다.
+-----------------------------------
+ 2019.01.09
+ * regent Heungseon 흥선대원군
+ * reformation 개혁
+ * conflict 대립
+ * foreigner 외국인
+ * establish diplomatic relation 수교하다
+ * unenlightened 무지한
+ * contract 계약하다
+ * stand one’s ground 자기 주장을 고집하다
