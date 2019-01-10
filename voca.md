@@ -62,3 +62,9 @@
  * unenlightened 무지한
  * contract 계약하다
  * stand one’s ground 자기 주장을 고집하다
+----------------------------------------
+ 2019.01.10
+ * government 정부
+ * be chased away 쫒겨나다
+ * get sb involved in 끌어들이다
+ * influence 영향을 미치다
