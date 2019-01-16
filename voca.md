@@ -68,3 +68,8 @@
  * be chased away 쫒겨나다
  * get sb involved in 끌어들이다
  * influence 영향을 미치다
+----------------------------------------
+ 2019.01.16
+ * ride for free 무임승차하다
+ * shoot 촬영하다
+ * meantime 그동안
