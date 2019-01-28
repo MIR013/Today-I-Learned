@@ -1,6 +1,6 @@
-# ÇÑ±¹»ç
- * ÇÑ±¹»ç ¼ö¾÷À» ¼ö°­ÇÏ°í ÇÊ±âÇÑ ÀÚ·á¸¦ ¾÷·Îµå ÇÏ°í ½Í¾úÀ¸³ª ÆÄÀÏÀÇ Å©±â°¡ ³Ê¹« Ä¿¼­ ºÐÇÒ ¾ÐÃàÇÏ·Á ¿Ã¸°´Ù.
- * [ÃÖÅÂ¼ºÀÇ °³Á¤ °í±Þ ÇÑ±¹»ç] (http://www.ebsi.co.kr/ebs/lms/lmsx/retrieveSbjtDtl.ebs?sbjtId=S20130001114) ¸¦ ¼ö°­ÇÏ¸ç °øºÎÇÏ¿´´Ù.
+# í•œêµ­ì‚¬
+ * í•œêµ­ì‚¬ ìˆ˜ì—…ì„ ìˆ˜ê°•í•˜ê³  í•„ê¸°í•œ ìžë£Œë¥¼ ì—…ë¡œë“œ í•˜ê³  ì‹¶ì—ˆìœ¼ë‚˜ íŒŒì¼ì˜ í¬ê¸°ê°€ ë„ˆë¬´ ì»¤ì„œ ë¶„í•  ì••ì¶•í•˜ë ¤ ì˜¬ë¦°ë‹¤.
+ * [ìµœíƒœì„±ì˜ ê°œì • ê³ ê¸‰ í•œêµ­ì‚¬](http://www.ebsi.co.kr/ebs/lms/lmsx/retrieveSbjtDtl.ebs?sbjtId=S20130001114) ë¥¼ ìˆ˜ê°•í•˜ë©° ê³µë¶€í•˜ì˜€ë‹¤.
 
 --------------------------------------------------
 # KOREAN HISTORY 
