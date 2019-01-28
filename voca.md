@@ -73,3 +73,9 @@
  * ride for free 무임승차하다
  * shoot 촬영하다
  * meantime 그동안
+-------------------------
+ 2019.01.28
+ * get x point as a result of the score x점을 받다.
+ * build 구성하다, 구축하다
+ * writing material 필기자료
+ * split up 분리하다
