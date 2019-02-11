@@ -69,9 +69,8 @@
         * _confidence_: API가 너의 AUDIO를 정확하게 transcribe 했는지 측정한 값
       
 
-> 이거 음성을 텍스트로 변환해주는 건가...?
-      
-      
-      
+  > 이거 음성을 텍스트로 변환해주는 건가...?
+
+
 
 [출처](https://google.qwiklabs.com/focuses/588?parent=catalog)
