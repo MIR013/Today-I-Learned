@@ -6,3 +6,5 @@
   3. Ansible playbook & galaxy
   4. Ansible playbook을 이용하여 java와 elasticsearch 설치
 --------------
+## < 1. Ansible의 정의 >
+ * 
