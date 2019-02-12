@@ -1,0 +1,5 @@
+1. 문제: https://www.kaggle.com/c/titanic
+
+2. 데이터 수집 
+    kaggle에서 data 다운로드
+    pandas로 data를 불러온다.
