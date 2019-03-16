@@ -79,3 +79,8 @@
  * build 구성하다, 구축하다
  * writing material 필기자료
  * split up 분리하다
+-----------------------------
+2019.03.16
+ * take a exam 시험을 치다.
+ * realize 깨닫다
+ * Industrial-Academic Cooperation and Development Agenda 산학협력과제
