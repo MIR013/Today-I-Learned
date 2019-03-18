@@ -84,3 +84,7 @@
  * take a exam 시험을 치다.
  * realize 깨닫다
  * Industrial-Academic Cooperation and Development Agenda 산학협력과제
+--------------------------
+2019.03.17
+ * analze 분석하다
+ * become familiar with 익히다
