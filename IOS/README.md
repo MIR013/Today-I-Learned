@@ -1,4 +1,4 @@
-Google Study Jam
+Mobile App Programming about IOS
 =============
 ## 모바일앱프로그래밍2 수업 정리
 * 경북대학교 정기숙 교수님

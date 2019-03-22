@@ -1,0 +1,9 @@
+iframe{
+  border-width: 1px;
+  border-style: solid;
+  border=color: red;
+  frameborder="0";
+}
+.wikiimg{
+  width: 100%;
+}
