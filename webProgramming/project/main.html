@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>고웹프(2019.1)_안전등산</title>
+  <title>고웹프(2019.1)_모여라</title>
 <!-- [템플릿 출처] Letter Template http://www.templatemo.com/tm-510-letter -->
 <!-- 템플릿 부분-->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->
@@ -39,8 +39,13 @@
       // 사용할 앱의 JavaScript 키를 설정해 주세요.
     Kakao.init('f709cbbbe77b71b8c2bf7637ce5050cb');
 /////////////////////////////
-var localMap;
-var markers=[];
+  //전역변수
+  var localMap;
+  var markers=[];
+  var centerMarker;
+  var centerLocation;
+  var beforePolygon;
+  var bounds = new daum.maps.LatLngBounds();
 /////////////////////////////
     //로그인 정보 확인
     function checkLoginStatus(){
@@ -62,23 +67,26 @@ var markers=[];
           var temp2 = inputString.indexOf('.jpg"}}}')
           kakaoImg = inputString.slice(temp1+18,temp2+4)
 
-          //로컬 스토리지에 데이터 저장 - 먼저 있던 데이터가 현재와 같은지
-          if(localStorage.getItem("kakaoID")!=kakaoID){localStorage.setItem("kakaoID",kakaoID);}
-          if(localStorage.getItem("kakaoNick")!=kakaoNick){localStorage.setItem("kakaoNick",kakaoNick);}
-          if(localStorage.getItem("kakaoImg")!=kakaoImg){localStorage.setItem("kakaoImg",kakaoImg);}
-
-          //다시 틀었을때, 카카오 아이디랑 맞으면 가장 최근의 기록을 바로 띄워줌
-
-
           //지도 띄우기 - default
           var mapContainer = document.getElementById('map'), // 지도를 표시할 div
           mapOption = {
-              center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+              center: new daum.maps.LatLng(35.888896, 128.611075), // 지도의 중심좌표
               level: 3 // 지도의 확대 레벨
           };
           localMap = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+          localMap.setZoomable(false);//확대/축소 금지
+          localMap.setDraggable(false); //지도 이동 금지
 
 
+          //로컬 스토리지에 데이터 저장 - 먼저 있던 데이터가 현재와 같은지
+          if(localStorage.getItem("kakaoID")!=kakaoID){
+            localStorage.setItem("kakaoID",kakaoID);
+          }else{
+            //다시 틀었을때, 카카오 아이디랑 맞으면 가장 최근의 기록을 바로 띄워줌
+            resetFriends();
+          }
+          if(localStorage.getItem("kakaoNick")!=kakaoNick){localStorage.setItem("kakaoNick",kakaoNick);}
+          if(localStorage.getItem("kakaoImg")!=kakaoImg){localStorage.setItem("kakaoImg",kakaoImg);}
 
         }else{
           alert("로그인을 해 주세요");
@@ -97,99 +105,163 @@ var markers=[];
 /////////////////////////
     //카카오 링크 보내기 -> 내 위치 전송
     function sendCurrentLocation(){
-      alert('내 위치 알리기')
+
       var title;
       var address;
       var friends;
       //로컬 스토리지에 내 위치값이 들어와 있는지 확인
       var Knick = localStorage.getItem("kakaoNick")
-      var currnetLocation = localStorage.getItem("address")
-      if(!Knick || !currnetLocation){ alert("정보가 없습니다! -> error") }
+      var Kimg = localStorage.getItem("kakaoImg")
+      var currnetLocation = localStorage.getItem("local_address")
+      if(!Knick || !currnetLocation || !Kimg){ alert("정보가 없습니다! -> error") }
       else{
-        title = '당신의 친구 '+Knick+'이 현재 아래와 같은 장소에 있습니다.'
-        friends = '당신의 친구 '+Knick+'의 위치입니다.'
+        title = '여러분들이 모여야 할 곳은  '+currnetLocation+'입니다.'
+        //alert(title)
       }
 
       Kakao.Link.createDefaultButton({
         container: '#kakao-link-btn',
         objectType: 'location',
         address: currnetLocation,
-        addressTitle: friends,
+        addressTitle: "위치 위치",
         content: {
           title: title,
           description: currnetLocation,
-          imageUrl: './img/letter_bg_01.jpg',
+          imageUrl: Kimg,
           link: {
             mobileWebUrl: 'https://developers.kakao.com',
             webUrl: 'https://developers.kakao.com'
           }
         },
-        buttons: [
-          {
-            title: '웹으로 보기',
-            link: {
-              mobileWebUrl: 'https://developers.kakao.com',
-              webUrl: 'https://developers.kakao.com'
-            }
+      buttons: [
+        {
+          title: '모여라 사용하기',
+          link: {
+            mobileWebUrl: 'http://daum.net',
+            webUrl: 'http://daum.net'
           }
-        ]
+        }
+      ]
       });
     }
 /////////////////////////
-    //현재 위치를 로컬 스토리지에 저장하기 - 저장할 필요 없음(다시 생각)
-    function setCurrentLocation(){
-      alert("현재위치 얻기");
-      //현재 gps값 받아오기
-      if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(function(position){
-          //coords.altitudeAccuracy 해발고도
-          $.ajax({
-            url: 'https://dapi.kakao.com/v2/local/geo/coord2address.json',
-            type: "GET",
-            headers: {'Authorization': 'KakaoAK 525d85fc1d56993f10c9481694039a7c'},
-            data: {'x':position.coords.longitude,"y":position.coords.latitude},
-            success: function(data){
-                //alert(JSON.stringify(data));
-                //로컬 스토리지에 저장 - 이미 저장된 값은 신경쓸 필요 없다
-                var inputString = JSON.stringify(data);
-                var temp1 = inputString.indexOf('address_name');
-                var temp2 = inputString.indexOf('region_1depth_name');
-                address = inputString.slice(temp1+15,temp2-3);
-                localStorage.setItem("address",address);
-            }, error: function(){
-              alert("error rest api")
-            }
-          });
-        });
-      }else{
-        alert("지도 사용 불가")
-      }
-    }
-/////////////////////////
-  //모든 참여자의 무게중심 찾기
-  function searchCenter(){
+    //중심의 좌표 위치를 주소로 받아오기
+  function setCurrentLocation(){
+    var lists = localStorage.getItem("address").split(",");
+    var x = lists[0],y=lists[1];
 
+    //현재 gps값 받아오기
+    $.ajax({
+      url: 'https://dapi.kakao.com/v2/local/geo/coord2address.json',
+      type: "GET",
+      headers: {'Authorization': 'KakaoAK 525d85fc1d56993f10c9481694039a7c'},
+      data: {'x':y,"y":x},
+      success: function(data){
+          //alert(JSON.stringify(data));
+          //로컬 스토리지에 저장 - 이미 저장된 값은 신경쓸 필요 없다
+          var inputString = JSON.stringify(data);
+          var temp1 = inputString.indexOf('address_name');
+          var temp2 = inputString.indexOf('region_1depth_name');
+          address = inputString.slice(temp1+15,temp2-3);
+          localStorage.setItem("local_address",address);
+      }, error: function(){
+        alert("error rest api")
+      }
+    });
   }
 /////////////////////////
-  //친구 갱신
-  //마커 갱신(맵)
-  function resetFriends(){//친구 수 받아옴
+  //모든 참여자의 중심 찾기
+  function placesSearchCB(data, status, pagination) { //callback function
+      if (status === daum.maps.services.Status.OK) {
+          // 정상적으로 검색이 완료
+          //그 위치중 중심과 가장 가까운 애를 선택
+          var l1=centerLocation.getLat();
+          var l2=centerLocation.getLng();
+          var x = data[0].y,y = data[0].x;
+          var minLen = (((x-l1)*(x-l1))+((y*l2)*(y*l2)));
+          var index=0;
+          for(var i=1;i<data.length;i++){
+            x = data[i].y; y=data[i].x;
+            var temp = (((x-l1)*(x-l1))+((y-l2)*(y-l2)));
+            if(temp<minLen){
+              minLen = temp;
+              index=i;
+            }
+          }
+
+          centerLocation = new daum.maps.LatLng(data[index].y, data[index].x);
+          searchCenter();
+      } else if (status === daum.maps.services.Status.ZERO_RESULT) {
+          // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+          alert('근처에 없습니다.');
+          searchCenter();
+      } else if (status === daum.maps.services.Status.ERROR) {
+          // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+          alert("retrival category error");
+      }
+  }
+///////////////////////
+  //카테고리 검색
+  function getCategory(){
+    var center = localMap.getCenter();
+    centerLocation = center;
+    //이때, 카테고리에 따라 근방 xm 이하면 그쪽으로 이동한다.
+    //주위에 없다면 이동안함
+    var cat = document.getElementById('category');
+    cat = cat.options[cat.selectedIndex].value;
+    if(cat != 0){
+      //카테고리에 따라 위치 찾기
+      // 장소 검색 객체를 생성합니다
+      var ps = new daum.maps.services.Places(map);
+      ps.categorySearch(cat, placesSearchCB, {location:center,radius:2000});
+    }
+    else{
+      searchCenter();
+    }
+  }
+/////////////////////////////
+  function searchCenter(){
+      //중심 마커 등록
+      localMap.setBounds(bounds);
+      center = centerLocation;
+      var markerImage = new daum.maps.MarkerImage("/img/marker.png", new daum.maps.Size(35,35))
+      if(centerMarker!=undefined){
+        centerMarker.setMap(null);
+      }
+      if(markers.length>1){
+        var marker = new daum.maps.Marker({
+            map: localMap,
+            position: center,
+            title : '중심 지점',
+            image:markerImage
+        });
+        centerMarker = marker
+      }
+
+      //중심 위치를 주소에 저장 후 넘겨주기
+      localStorage.setItem("address",center.getLat()+","+center.getLng());
+
+      setCurrentLocation(); //좌표를 주소로 변환
+  }
+/////////////////////////
+  //친구 갱신&마커 갱신(맵)
+  function resetFriends(){
     var fl = localStorage.getItem('friendsList');
     var al = localStorage.getItem('addressInfo');
     // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
-    var bounds = new daum.maps.LatLngBounds();
-
+    if(beforePolygon != undefined){ //이전 다형 삭제
+        beforePolygon.setMap(null);
+    }
     if(!fl || !al){
       var obj = document.getElementById("friends");
       obj.innerHTML = "";
-      //지도 갱신
     }
     else{
         //리스트로 바꾸기
         var html="";
         var flList = fl.split(",");
         var aList = al.split(",");
-        var centerX=0.0,centerY=0.0;
+        var polygonPath=[]
 
         for(var i=0;i<flList.length;i=i+2){
           var x = parseFloat(flList[i]);
@@ -198,29 +270,44 @@ var markers=[];
           //html
           html+='친구'+(i/2+1)+": "+aList[i/2]+"<br>";
           //maker 등록
-          centerX+=x; centerY+=y;
+          var temp = new daum.maps.LatLng(x, y)
+          polygonPath[polygonPath.length] = temp;
           var marker = new daum.maps.Marker({
               map: localMap, // 마커를 표시할 지도
-              position: new daum.maps.LatLng(x, y), // 마커를 표시할 위치
+              position: temp, // 마커를 표시할 위치
               title : '친구'+(i/2+1), // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           });
           markers.push(marker);
-          bounds.extend(new daum.maps.LatLng(x, y));
-
-
+          //markers[markers.length] = marker;
+          if(!bounds.contain(temp)){
+            bounds.extend(temp);
+          }
         }
         var obj = document.getElementById("friends");
         obj.innerHTML = html;
 
-        //무게중심
-        searchCenter();
         //지도의 중심 계산
         localMap.setBounds(bounds);
+        //중앙찾기
+        getCategory();
 
+        // 지도에 표시할 선을 생성합니다
+        var polygon = new daum.maps.Polygon({
+            path:polygonPath, // 그려질 다각형의 좌표 배열입니다
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#FF0000', // 선의 색깔입니다
+            strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#A2FF99', // 채우기 색깔입니다
+            fillOpacity: 0.0 // 채우기 불투명도 입니다
+        });
+        polygon.setMap(localMap);
+        beforePolygon = polygon;
     }
 
 
   }
+  /////////////////////////
   //주소입력받기 대구 북구 대학로 80
   function getAddress(e) {
     var geocoder = new daum.maps.services.Geocoder();
@@ -255,7 +342,6 @@ var markers=[];
           }
       }).open();
   }
-
 /////////////////////////
   //전부 삭제
   function resetAllData(){
@@ -265,13 +351,19 @@ var markers=[];
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null); //됨..
     }
+    markers=[];
+    if(centerMarker!=undefined){
+      centerMarker.setMap(null);
+    }
+    //중심좌표
+    var moveLatLon = new daum.maps.LatLng(35.888896, 128.611075);
+    localMap.setLevel(4, {anchor: new daum.maps.LatLng(35.888896, 128.611075)});
+    localMap.panTo(moveLatLon);
     resetFriends();
   }
-
 /////////////////////////
   //main 함수같은 곳
   checkLoginStatus(); //로그인 여부 확인
-  //이전 기록 찾아서 띄워주기
   </script>
 
 			<div id="particles-js"></div>
@@ -288,42 +380,49 @@ var markers=[];
 				<div class="row cb-slideshow-text-container ">
           <!--  여기서 부터 코딩 -->
 					<div class= "tm-content" style="width:100%; height:100%;">
-            <header class="mb-5"><h1>안전*등산</h1></header>
-            <div id = "personal_info" style="color:white;">
-              //개인정보 출력
-            </div>
+            <header class="mb-5" style="margin-bottom: 0.5%!important;border:3px solid white; text-align:center">
+            <h1>*모여라*</h1>
+            <div id = "personal_info" style="color:white;"></div>
             <a id="kakao-logout-btn" href="javascript:logout();">로그아웃</a>
-            <div id = "input_location">
-              //참여할 사람들의 위치 얻어오기
-              <div id="locations">
+            </header>
+            <div id = "input_location"  style="border:3px solid white;overflow:hidden">
+                <div id="locations" style="float:left;margin:0%;text-align:center;width:40%;padding-left:2%;padding-right:2%; ">
+                  //참여할 사람들의 위치 얻어오기
+                  <form>
+                    <input type="text" id="sample5_address" placeholder="주소">
+                    <input type="button" onclick="getAddress()" value="주소 검색"><br>
+                  </form>
+                  <div id="friends" style="border:3px solid white"></div>
+                </div>
+              <!--  //////////////////////////////////  -->
+              <div style="float:right;margin:0%;width:40%;height:100%;padding-left:2%;padding-right:2%;">
                 <form>
-                  <input type="text" id="sample5_address" placeholder="주소">
-                  <input type="button" onclick="getAddress()" value="주소 검색"><br>
+                  <br>중앙지점에서의 랜드마크: &nbsp;&nbsp;&nbsp;
+                  <select id='category'>
+                    <option value='0' selected>지정안함</option>
+                    <option value='MT1'>대형마트</option>
+                    <option value='SC4'>학교</option>
+                    <option value='SW8'>지하철역</option>
+                    <option value='BK9'>은행</option>
+                    <option value='CT1'>문화시설</option>
+                    <option value='PO3'>공공기관</option>
+                    <option value='AT4'>관광명소</option>
+                    <option value='AD5'>숙박</option>
+                    <option value='FD6'>음식점</option>
+                    <option value='CE7'>카페</option>
+                    <option value='HP8'>병원</option>
+                    <option value='PM9'>약국</option>
+                  </select>
                 </form>
-                <div id="friends"></div>
-
-
-
-
+                <button onclick="getCategory()" style="width:39%;">중앙 찾기</button>
+                <button id="kakao-link-btn" onclick="sendCurrentLocation()" style="width:40%;">친구들에게 위치 알리기</button>
+                <button onclick="resetAllData()" style="width:80%;">전체 삭제</button>
               </div>
-
-              <button onclick="setCurrentLocation()">현재 위치 받아오기</button>
-              <button onclick="resetAllData()">전체 삭제</button>
-              <button onclick="searchCenter()">중앙 찾기</button>
-              <a id="kakao-link-btn" href="javascript:sendCurrentLocation();">친구에게 위치 알리기</a>
             </div>
 
-            <div id = "map_info">
-              //지도 그리기(모든 참여자를 마커로 표시+길표시)
+            <div id = "map_info" style="width:100%;height:300px;padding-left:10%;padding-right:10%;padding-top:1%;margin-top:0.5%;border:3px solid white">
               <div id="map" style="width:100%;height:250px;"></div>
             </div>
-
-
-
-
-
-
-
 
 					</div>
 				</div>
@@ -348,8 +447,8 @@ var markers=[];
     if(!Knick || !Kimg){ alert("정보가 없습니다 -> error") }
     else{
       var obj = document.getElementById("personal_info");
-      var str = "<img src='"+Kimg+"' width='40'>";
-      str += "안전 등산에 오신 걸 환영합니다. "+ Knick +"님.";
+      var str = "<img src='"+Kimg+"' width='80'>";
+      str += "모여라에 오신 걸 환영합니다. "+ Knick +"님.";
       obj.innerHTML = str;
     }
 
