@@ -5,10 +5,10 @@
   <title> 2016111813_이상형_월드컵_설기편 </title>
   <script>
     //아이디를 로컬 스토리지에서 게임횟수를 불러와 횟수를 저장한다.
-    function loginEventListener(e){
+    function loginEventListener(){
       //1. input text의 객체를 불러와 입력된 값을 찾는다.
-      var inputText = document.getElementById("ID");
-      userID = inputText.value;
+    //  var inputText = document.getElementById("ID");
+    //  userID = inputText.value;
 
       //2. 로컬스토리지(ID:playNum)를 확인한다.
       var playNumValue = localStorage.getItem(userID);
@@ -22,72 +22,88 @@
       }
       //로컬스토리지 이벤트 처리??
       localStorage.setItem(userID,playNum);//가 발생시 등록해준 이벤트 리스너로 연락감
-
       //게임 시작
       gameStart();
     }
-    function storageEventListener(e){
-      //값 변경 시 다른 탭이 행동했으면 하는 것
-      alert(userID+" : " +playNum)
-    }
-    function choiceEventListener(e,index1,index2){
+    function choiceEventListener(e){
       //두 라디오 값을 배열에 저장
       var radioValue = document.getElementsByName("choice");
+
       //어차피 2개
       if(radioValue[0].checked==false){//밑이 선택
         selected[pick[0]]=0;
-        selected[pick[1]]=1;
+        selected[pick[1]]=2;
       }else{//위가 선택
-        selected[pick[0]]=1;
+        selected[pick[0]]=2;
         selected[pick[1]]=0;
       }
-
       //다음 대결 출력
       gameStart();
-
     }
 
   </script>
 </head>
   <body>
+    <div id="totalHtml">
+      <h2> 2016111813_이상형_월드컵_설기편에 오신걸 환영합니다 </h2><hr>
+    </div>
+
     <script>
       //전역변수들
       var playNum; //전체 플레이 횟수 (전역변수)
       var userID; //유저 이름
       var imgList = ["개껌씹는설기.jpg","구경설기.jpg","산책설기.jpg","애기설기.jpg","옥상설기.jpg","자는설기.jpg","꽃밭설기.jpg","행복설기.jpg"]
-      var selected = []; //0:선택 안됨, 1:선택됨
-      var pick = [-1,-1]; //게임에 참여할 애의 index 저장
+      var selected = []; //0:선택 안됨, 1:선택됨, 2:게임에 참여함
       for(i=0;i<8;i++){selected[i]=1};
+      var pick = [-1,-1]; //게임에 참여할 애의 index 저장
 
-      //리스너 등록 - 필요없을듯
-      window.addEventListener("storage",storageEventListener,false);
+      //유저 입력
+      var userID = prompt("ID를 입력하세요!");
+      loginEventListener();
 
 
+      //배열에 0,2만 있는지 확인 - 한 라운드 다 돈 것
+      function isOnlyTwo(){
+        for(var i=0;i<selected.length;i++){
+          if(selected[i]==1){
+            return false
+          }
+        }
+        return true
+      }
       //이상형 월드컵 게임
       function gameStart(){
+        //초기화 - 1인 값이 없다면 2->1로
+        if(isOnlyTwo()){
+          for(var i=0;i<selected.length;i++){
+            if(selected[i]==2){
+              selected[i]=1;
+            }
+          }
+        }
+
         //html 화면 리셋
         var divObj = document.getElementById("totalHtml")
+        //alert("dicObj"+divObj);
 
-        //게임에 참여할 2개 모집
+        //게임에 참여할 2개 모집 - 반복해줄 필요 없음! 버튼 누르면 다시 불리니까
+        //pick에 게임할 애들만 넣어주면 된다.
 
-        /*
         //선택된 애들만 게임에 참여
         var count =0;
-        for(i=playStart[playTime];i<8;i++){
+        for(i=0;i<selected.length;i++){
           if(count==2) break;
-          if(selected[i]==1) pick[count++]=i;
+          if(selected[i]==1) {pick[count++]=i;}
         }
-        alert(pick[0]);
-        //게임이 모두 끝난 경우
+        //게임이 모두 끝난 경우 - 마지막엔 1 하나만 남음
         if (count == 1){
-          endGame(pick[0]);//하나만 선택 되었을 것이므로
+          endGame();//하나만 선택 되었을 것이므로
         }else{
+          //alert(pick[0]+":"+pick[1]);
           var nextHTML = setHTML(pick[0],pick[1]);
           divObj.innerHTML = nextHTML //안의 내용을 전부 바꾸게 한다.
         }
-*/
 
-        pick = [-1,-1];
       }
       //선택창을 띄운다
       function setHTML(index1,index2){
@@ -105,22 +121,23 @@
         return imgStr
       }
       //게임을 종료한다
-      function endGame(winner){
+      function endGame(){
+        var winner;
+        for(i=0;i<selected.length;i++){
+          if(selected[i]==1) {
+            winner = i;
+            break;
+          }
+        }
         var divObj = document.getElementById("totalHtml")
+        //이미지 출력
         var endStr = userID+"님의 "+playNum+"번째 선택은 "+imgList[winner].split(".")[0]+" 였습니다!!";
+        divObj.innerHTML = endStr;
       }
 
     </script>
-    <div id="totalHtml">
-      <h2> 2016111813_이상형_월드컵_설기편에 오신걸 환영합니다 </h2><hr>
-      <form>
-        이름을 입력해 주세요!<br>
-        <input type="text" id="ID" >
-        <input type="button" value="확인" onclick="loginEventListener(event)">
-
-      </form>
 
 
-    </div>
+
   </body>
 </html>

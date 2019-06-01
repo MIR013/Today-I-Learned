@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>고웹프(2019.1)_안전등산</title>
+<!-- [템플릿 출처] Letter Template http://www.templatemo.com/tm-510-letter -->
+<!-- 템플릿 부분-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/demo.css" />
+  <link rel="stylesheet" href="css/templatemo-style.css">
+  <script type="text/javascript" src="js/modernizr.custom.86080.js"></script>
+<!-- js 추가-->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+<!-- 한글 폰트 적용-->
+  <style>
+    @font-face {
+      font-family: hanna;
+      src:url('fonts/BMHANNAAir_ttf.ttf');
+    }
+    body {font-family: hanna;}
+  </style>
+
+</head>
+<body>
+			<div id="particles-js"></div>
+			<ul class="cb-slideshow">
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	   </ul>
+
+			<div class="container-fluid">
+				<div class="row cb-slideshow-text-container ">
+          <!--  여기서 부터 코딩 -->
+					<div class= "tm-content col-xl-6 col-sm-8 ml-auto col-xs-8 section">
+  					<header class="mb-5"><h1>안전*등산</h1></header>
+  					<P class="mb-5">
+              고급 웹 프로그래밍 과제<br>
+              등산객을 위한 화재 및 기상 정보 알리미 입니다.<br>
+              *홈페이지 이용을 위해서 로그인 해 주세요.*<br>
+            </P>
+            <a id="kakao-login-btn"></a>
+
+            <!--아래 링크 부분-->
+  					<div class="tm-social-icons-container text-xs-center">
+  	                    <a href="https://www.forest.go.kr/kfsweb/kfs/idx/Index.do" target="_blank"><img src="./img/forest.png" alt="이미지 오류" width="30"></a>
+  	                    <a href="https://www.nfa.go.kr/nfa/" target="_blank"><img src="./img/fire.png" alt="이미지 오류" width="30"></a>
+  	                    <a href="http://www.safekorea.go.kr/idsiSFK/neo/main/main.html" target="_blank"><img src="./img/disaster.png" alt="이미지 오류" width="30"></a>
+  	        </div>
+
+					</div>
+				</div>
+        <!-- 저작권 및 템플릿 주소-->
+				<div class="footer-link">
+					<p>Copyright © 2019 2016111813 차수진
+          - Design: <a rel="nofollow" href="http://www.google.com/+templatemo" target="_parent">Templatemo</a></p>
+				</div>
+
+			</div>
+</body>
+
+<!-- api script codes -->
+<script type='text/javascript'>
+//KAKAO TALK
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('f709cbbbe77b71b8c2bf7637ce5050cb');
+
+    // 카카오 로그인 버튼을 생성합니다.
+    Kakao.Auth.createLoginButton({
+      container: '#kakao-login-btn',
+      success: function(authObj) {
+        //alert(JSON.stringify(authObj));
+        alert("로그인 성공")
+        //html 파일 이동 (다음 장면)
+        window.location.href = "./main.html";
+
+      },
+      fail: function(err) {
+        // alert(JSON.stringify(err));
+        alert("로그인에 실패하셨습니다. ㅜㅜ")
+      }
+    });
+
+
+
+</script>
+
+
+<script type="text/javascript" src="js/particles.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+</html>

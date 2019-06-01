@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>고웹프(2019.1)_안전등산</title>
+<!-- [템플릿 출처] Letter Template http://www.templatemo.com/tm-510-letter -->
+<!-- 템플릿 부분-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/demo.css" />
+  <link rel="stylesheet" href="css/templatemo-style.css">
+  <script type="text/javascript" src="js/modernizr.custom.86080.js"></script>
+<!-- js 추가-->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
+<!-- 한글 폰트 적용-->
+  <style>
+    @font-face {
+      font-family: hanna;
+      src:url('fonts/BMHANNAAir_ttf.ttf');
+    }
+    body {font-family: hanna; color:white;}
+  </style>
+
+
+</head>
+
+<body>
+  <!-- api script codes -->
+  <script type="text/javascript">
+  //KAKAO TALK
+      // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('f709cbbbe77b71b8c2bf7637ce5050cb');
+/////////////////////////////
+    //로그인 정보 확인
+    function checkLoginStatus(){
+      Kakao.Auth.getStatus(function(statusObj){
+        if(statusObj.status == "connected"){
+          //alert("로그인 성공");
+          //alert(JSON.stringify(statusObj));
+          //여기서 정보 파싱
+          var inputString = JSON.stringify(statusObj)
+          var temp1 = inputString.indexOf('id')
+          var temp2 = inputString.indexOf('properties')
+          kakaoID = inputString.slice(temp1+4,temp2-2)
+
+          var temp1 = inputString.indexOf('nickname')
+          var temp2 = inputString.indexOf('thumbnail_image')
+          kakaoNick = inputString.slice(temp1+11,temp2-3)
+
+          var temp1 = inputString.indexOf('thumbnail_image')
+          var temp2 = inputString.indexOf('.jpg"}}}')
+          kakaoImg = inputString.slice(temp1+18,temp2+4)
+
+          //로컬 스토리지에 데이터 저장 - 먼저 있던 데이터가 현재와 같은지
+          if(localStorage.getItem("kakaoID")!=kakaoID){localStorage.setItem("kakaoID",kakaoID);}
+          if(localStorage.getItem("kakaoNick")!=kakaoNick){localStorage.setItem("kakaoNick",kakaoNick);}
+          if(localStorage.getItem("kakaoImg")!=kakaoImg){localStorage.setItem("kakaoImg",kakaoImg);}
+
+
+        }else{
+          alert("로그인을 해 주세요");
+          //index.html로 넘어가 로그인 하게 한다
+          window.location.href = "./index.html";
+        }
+      });
+    }
+/////////////////////////
+    //로그아웃
+    function logout(){
+      Kakao.Auth.logout(function(){
+        window.location.reload()
+      });
+    }
+/////////////////////////
+    //카카오 링크 보내기 -> 내 위치 전송
+    function sendCurrentLocation(){
+      var title;
+      var address;
+      var friends;
+      //로컬 스토리지에 내 위치값이 들어와 있는지 확인
+      var Knick = localStorage.getItem("kakaoNick")
+      var currnetLocation = localStorage.getItem("address")
+      if(!Knick || !currnetLocation){ alert("정보가 없습니다 -> error") }
+      else{
+        title = '당신의 친구 '+Knick+'이 현재 아래와 같은 장소에 있습니다.'
+        friends = '당신의 친구 '+Knick+'의 위치입니다.'
+      }
+
+      Kakao.Link.createDefaultButton({
+        container: '#kakao-link-btn',
+        objectType: 'location',
+        address: currnetLocation,
+        addressTitle: friends,
+        content: {
+          title: title,
+          description: currnetLocation,
+          imageUrl: './img/letter_bg_01.jpg',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        },
+        buttons: [
+          {
+            title: '웹으로 보기',
+            link: {
+              mobileWebUrl: 'https://developers.kakao.com',
+              webUrl: 'https://developers.kakao.com'
+            }
+          }
+        ]
+      });
+    }
+/////////////////////////
+    //현재 위치를 로컬 스토리지에 저장하기
+    function setCurrentLocation(){
+      //현재 gps값 받아오기
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(position){
+          //coords.altitudeAccuracy 해발고도
+          var urlData = 'https://dapi.kakao.com/v2/local/geo/coord2address.json x='+ position.coords.longitude+'&y='+position.coords.latitude;
+          $.ajax({
+            url: 'https://dapi.kakao.com/v2/local/geo/coord2address.json',
+            type: "GET",
+            headers: {'Authorization': 'KakaoAK 525d85fc1d56993f10c9481694039a7c'},
+            data: {'x':position.coords.longitude,"y":position.coords.latitude},
+            success: function(data){
+                //alert(JSON.stringify(data));
+                //로컬 스토리지에 저장 - 이미 저장된 값은 신경쓸 필요 없다
+                var inputString = JSON.stringify(data);
+                var temp1 = inputString.indexOf('address_name');
+                var temp2 = inputString.indexOf('region_1depth_name');
+                address = inputString.slice(temp1+15,temp2-3);
+                localStorage.setItem("address",address);
+            }, error: function(){
+              alert("error rest api")
+            }
+          });
+        });
+      }else{
+        alert("지도 사용 불가")
+      }
+    }
+/////////////////////////
+/////////////////////////
+/////////////////////////
+
+/////////////////////////
+  //main 함수같은 곳
+  checkLoginStatus(); //로그인 여부 확인
+  //이전 기록 찾아서 띄워주기
+  </script>
+
+			<div id="particles-js"></div>
+			<ul class="cb-slideshow">
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	   </ul>
+
+			<div class="container-fluid">
+				<div class="row cb-slideshow-text-container ">
+          <!--  여기서 부터 코딩 -->
+					<div class= "tm-content" style="width:100%; height:100%;">
+            <header class="mb-5"><h1>안전*등산</h1></header>
+            <div id = "personal_info" style="color:white;">
+              //개인정보 출력
+            </div>
+            <a id="kakao-logout-btn" href="javascript:logout();">로그아웃</a>
+            <div id = "input_location">
+              //현재 위치 입력
+              <a id="kakao-link-btn" href="javascript:setCurrentLocation();">현재 위치 받아오기</a>
+              <a id="kakao-link-btn" href="javascript:sendCurrentLocation();">친구에게 위치 알리기</a>
+            </div>
+            <div id = "fire_info">
+              //화재정보
+              
+
+
+            </div>
+            <div id = "wheather_info">
+              //기상정보
+
+            </div>
+
+
+
+
+
+
+
+
+					</div>
+				</div>
+        <!-- 저작권 및 템플릿 주소-->
+				<div class="footer-link">
+					<p>Copyright © 2019 2016111813 차수진
+          - Design: <a rel="nofollow" href="http://www.google.com/+templatemo" target="_parent">Templatemo</a></p>
+				</div>
+
+			</div>
+</body>
+
+
+<script>
+//여기는 html을 동적으로 관리하는 곳
+/////////////////////////
+  // 개인정보 출력 창
+  function personal(){
+    //로컬스토리지에서 정보 가져오기
+    Knick = localStorage.getItem("kakaoNick")
+    Kimg = localStorage.getItem("kakaoImg")
+    if(!Knick || !Kimg){ alert("정보가 없습니다 -> error") }
+    else{
+      var obj = document.getElementById("personal_info");
+      var str = "<img src='"+Kimg+"' width='40'>";
+      str += "안전 등산에 오신 걸 환영합니다. "+ Knick +"님.";
+      obj.innerHTML = str;
+    }
+
+  }
+  personal();
+
+
+/////////////////////////
+
+</script>
+
+
+<script type="text/javascript" src="js/particles.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+</html>
