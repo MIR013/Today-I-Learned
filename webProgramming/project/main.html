@@ -28,16 +28,50 @@
     }
     body {font-family: hanna; color:white;}
   </style>
-
-
+<!-- 버튼 이미지 [출처](https://nanati.me/css-button-design/)-->
+  <style>
+      input[type=button],button{
+        background:#6E7783;
+        color:#fff;
+        border:none;
+        position:relative;
+        cursor:pointer;
+        transition:800ms ease all;
+        outline:none;
+      }
+      input[type=button]:hover,button:hover{
+        background:#fff;
+        color:#6E7783;
+      }
+      input[type=button]:before,input[type=button]:after,button:before,button:after{
+        content:'';
+        position:absolute;
+        top:0;
+        right:0;
+        height:2px;
+        width:0;
+        background: #6E7783;
+        transition:400ms ease all;
+      }
+      input[type=button]:after,button:after{
+        right:inherit;
+        top:inherit;
+        left:0;
+        bottom:0;
+      }
+      input[type=button]:hover:before,input[type=button]:hover:after,button:hover:before,button:hover:after{
+        width:100%;
+        transition:800ms ease all;
+      }
+  </style>
 </head>
 
 <body>
   <!-- api script codes -->
-  <script type="text/javascript">
+<script type="text/javascript">
   //KAKAO TALK
-      // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('f709cbbbe77b71b8c2bf7637ce5050cb');
+  // 사용할 앱의 JavaScript 키를 설정해 주세요.
+  Kakao.init('f709cbbbe77b71b8c2bf7637ce5050cb');
 /////////////////////////////
   //전역변수
   var localMap;
@@ -48,7 +82,7 @@
   var bounds = new daum.maps.LatLngBounds();
 /////////////////////////////
     //로그인 정보 확인
-    function checkLoginStatus(){
+  function checkLoginStatus(){
       Kakao.Auth.getStatus(function(statusObj){
         if(statusObj.status == "connected"){
           //alert("로그인 성공");
@@ -97,14 +131,19 @@
     }
 /////////////////////////
     //로그아웃
-    function logout(){
+  function logout(){
       Kakao.Auth.logout(function(){
         window.location.reload()
       });
     }
 /////////////////////////
-    //카카오 링크 보내기 -> 내 위치 전송
-    function sendCurrentLocation(){
+    //카카오 링크 보내기 -> 모임장소 알리기
+  function sendCurrentLocation(){
+      //등록된 장소가 1개 이하면 모임장소를 검색하지 않음
+      if(markers.length<2){
+        alert("모임장소를 알리기에는 참여자가 적습니다.");
+        return;
+      }
 
       var title;
       var address;
@@ -169,8 +208,8 @@
       }
     });
   }
-/////////////////////////
-  //모든 참여자의 중심 찾기
+///////////////////////////////////////////////////////////////////////
+   //callback
   function placesSearchCB(data, status, pagination) { //callback function
       if (status === daum.maps.services.Status.OK) {
           // 정상적으로 검색이 완료
@@ -201,8 +240,14 @@
       }
   }
 ///////////////////////
-  //카테고리 검색
+   //카테고리(랜드마크) 검색
   function getCategory(){
+    //등록된 장소가 1개 이하면 중앙 검색하지 않음
+    if(markers.length<2){
+      alert("중앙을 찾기에는 참여자가 적습니다.");
+      return;
+    }
+
     var center = localMap.getCenter();
     centerLocation = center;
     //이때, 카테고리에 따라 근방 xm 이하면 그쪽으로 이동한다.
@@ -220,6 +265,7 @@
     }
   }
 /////////////////////////////
+   //중심 위치의 좌표 저장 + 마커 등록
   function searchCenter(){
       //중심 마커 등록
       localMap.setBounds(bounds);
@@ -228,23 +274,22 @@
       if(centerMarker!=undefined){
         centerMarker.setMap(null);
       }
-      if(markers.length>1){
-        var marker = new daum.maps.Marker({
+
+      var marker = new daum.maps.Marker({
             map: localMap,
             position: center,
             title : '중심 지점',
             image:markerImage
         });
-        centerMarker = marker
-      }
+      centerMarker = marker
 
       //중심 위치를 주소에 저장 후 넘겨주기
       localStorage.setItem("address",center.getLat()+","+center.getLng());
-
-      setCurrentLocation(); //좌표를 주소로 변환
+      //좌표를 주소로 변환
+      setCurrentLocation();
   }
-/////////////////////////
-  //친구 갱신&마커 갱신(맵)
+///////////////////////////////////////////////////////////////////////
+   //친구 갱신&마커 갱신(맵)
   function resetFriends(){
     var fl = localStorage.getItem('friendsList');
     var al = localStorage.getItem('addressInfo');
@@ -286,10 +331,10 @@
         var obj = document.getElementById("friends");
         obj.innerHTML = html;
 
-        //지도의 중심 계산
+        //지도 마커가 다 보이게 하기
         localMap.setBounds(bounds);
         //중앙찾기
-        getCategory();
+        //getCategory();
 
         // 지도에 표시할 선을 생성합니다
         var polygon = new daum.maps.Polygon({
@@ -342,7 +387,7 @@
           }
       }).open();
   }
-/////////////////////////
+///////////////////////////////////////////////////////////////////////
   //전부 삭제
   function resetAllData(){
     localStorage.removeItem('friendsList');
@@ -364,8 +409,8 @@
 /////////////////////////
   //main 함수같은 곳
   checkLoginStatus(); //로그인 여부 확인
-  </script>
 
+  </script>
 			<div id="particles-js"></div>
 			<ul class="cb-slideshow">
 	            <li></li>
@@ -375,55 +420,51 @@
 	            <li></li>
 	            <li></li>
 	   </ul>
-
 			<div class="container-fluid">
 				<div class="row cb-slideshow-text-container ">
           <!--  여기서 부터 코딩 -->
 					<div class= "tm-content" style="width:100%; height:100%;">
-            <header class="mb-5" style="margin-bottom: 0.5%!important;border:3px solid white; text-align:center">
+            <header class="mb-5" style="margin-bottom: 0.5%!important;border:3px solid white; text-align:center;padding:0.5%">
             <h1>*모여라*</h1>
             <div id = "personal_info" style="color:white;"></div>
-            <a id="kakao-logout-btn" href="javascript:logout();">로그아웃</a>
+            <button id="kakao-logout-btn" onclick="logout()" style="width:140px;">로그아웃</button>
             </header>
-            <div id = "input_location"  style="border:3px solid white;overflow:hidden">
-                <div id="locations" style="float:left;margin:0%;text-align:center;width:40%;padding-left:2%;padding-right:2%; ">
-                  //참여할 사람들의 위치 얻어오기
-                  <form>
-                    <input type="text" id="sample5_address" placeholder="주소">
-                    <input type="button" onclick="getAddress()" value="주소 검색"><br>
-                  </form>
-                  <div id="friends" style="border:3px solid white"></div>
-                </div>
+            <!--  //////////////////////////////////  -->
+            <div id = "input_location"  style="border:3px solid white;overflow:hidden;height:auto;padding:5%">
+                <div id="locations" style="float:left;margin:0%;text-align:center;width:40%;padding-left:2%;padding-right:2%;margin-left:2%">
+                    <h3><참여할 사람들의 위치를 입력해 주세요></h3><br>
+                    <form>
+                      <input type="text" id="sample5_address" placeholder="주소 검색을 눌러주세요">
+                      <input type="button" onclick="getAddress()" value="주소 검색"><br>
+                    </form>
+                    <div id="friends" style="border:3px solid white;margin-top:2%"></div>
+                    <form style="margin-bottom:1%">
+                      <br>근처  랜드마크: &nbsp;
+                      <select id='category'>
+                        <option value='0' selected>지정안함</option>
+                        <option value='MT1'>대형마트</option>
+                        <option value='SC4'>학교</option>
+                        <option value='SW8'>지하철역</option>
+                        <option value='BK9'>은행</option>
+                        <option value='CT1'>문화시설</option>
+                        <option value='PO3'>공공기관</option>
+                        <option value='AT4'>관광명소</option>
+                        <option value='AD5'>숙박</option>
+                        <option value='FD6'>음식점</option>
+                        <option value='CE7'>카페</option>
+                        <option value='HP8'>병원</option>
+                        <option value='PM9'>약국</option>
+                      </select>
+                    </form>
+                    <button onclick="getCategory()" style="width:39%;">중앙 찾기</button>
+                    <button id="kakao-link-btn" onclick="sendCurrentLocation()" style="width:40%;">모임장소 알리기</button>
+                    <button onclick="resetAllData()" style="width:80%;margin-top:1%">전체 삭제</button>
+              </div>
               <!--  //////////////////////////////////  -->
-              <div style="float:right;margin:0%;width:40%;height:100%;padding-left:2%;padding-right:2%;">
-                <form>
-                  <br>중앙지점에서의 랜드마크: &nbsp;&nbsp;&nbsp;
-                  <select id='category'>
-                    <option value='0' selected>지정안함</option>
-                    <option value='MT1'>대형마트</option>
-                    <option value='SC4'>학교</option>
-                    <option value='SW8'>지하철역</option>
-                    <option value='BK9'>은행</option>
-                    <option value='CT1'>문화시설</option>
-                    <option value='PO3'>공공기관</option>
-                    <option value='AT4'>관광명소</option>
-                    <option value='AD5'>숙박</option>
-                    <option value='FD6'>음식점</option>
-                    <option value='CE7'>카페</option>
-                    <option value='HP8'>병원</option>
-                    <option value='PM9'>약국</option>
-                  </select>
-                </form>
-                <button onclick="getCategory()" style="width:39%;">중앙 찾기</button>
-                <button id="kakao-link-btn" onclick="sendCurrentLocation()" style="width:40%;">친구들에게 위치 알리기</button>
-                <button onclick="resetAllData()" style="width:80%;">전체 삭제</button>
+              <div id = "map_info" style="float:right;margin:0%;width:40%;padding-left:2%;padding-right:2%;;margin-right:2%">
+                <div id="map" style="width:100%;height:250px;"></div>
               </div>
             </div>
-
-            <div id = "map_info" style="width:100%;height:300px;padding-left:10%;padding-right:10%;padding-top:1%;margin-top:0.5%;border:3px solid white">
-              <div id="map" style="width:100%;height:250px;"></div>
-            </div>
-
 					</div>
 				</div>
         <!-- 저작권 및 템플릿 주소-->
@@ -435,26 +476,24 @@
 			</div>
 </body>
 
-
 <script>
 //여기는 html을 동적으로 관리하는 곳
 /////////////////////////
-  // 개인정보 출력 창
-  function personal(){
-    //로컬스토리지에서 정보 가져오기
-    Knick = localStorage.getItem("kakaoNick")
-    Kimg = localStorage.getItem("kakaoImg")
-    if(!Knick || !Kimg){ alert("정보가 없습니다 -> error") }
-    else{
-      var obj = document.getElementById("personal_info");
-      var str = "<img src='"+Kimg+"' width='80'>";
-      str += "모여라에 오신 걸 환영합니다. "+ Knick +"님.";
-      obj.innerHTML = str;
+    // 개인정보 출력 창
+ function personal(){
+      //로컬스토리지에서 정보 가져오기
+      Knick = localStorage.getItem("kakaoNick")
+      Kimg = localStorage.getItem("kakaoImg")
+      if(!Knick || !Kimg){ alert("정보가 없습니다 -> error") }
+      else{
+        var obj = document.getElementById("personal_info");
+        var str = "<img src='"+Kimg+"' width='80'>";
+        str += "모여라에 오신 걸 환영합니다. "+ Knick +"님.";
+        obj.innerHTML = str;
+      }
+
     }
-
-  }
   personal();
-
 /////////////////////////
 
 </script>
