@@ -285,6 +285,7 @@
 
       //중심 위치를 주소에 저장 후 넘겨주기
       localStorage.setItem("address",center.getLat()+","+center.getLng());
+      //localMap.setLevel(4)
       //좌표를 주소로 변환
       setCurrentLocation();
   }
@@ -333,6 +334,7 @@
 
         //지도 마커가 다 보이게 하기
         localMap.setBounds(bounds);
+      //  alert(localMap.getLevel())
         //중앙찾기
         //getCategory();
 
@@ -400,6 +402,8 @@
     if(centerMarker!=undefined){
       centerMarker.setMap(null);
     }
+    //bounds clear
+    bounds = new daum.maps.LatLngBounds();
     //중심좌표
     var moveLatLon = new daum.maps.LatLng(35.888896, 128.611075);
     localMap.setLevel(4, {anchor: new daum.maps.LatLng(35.888896, 128.611075)});
