@@ -162,7 +162,7 @@
         container: '#kakao-link-btn',
         objectType: 'location',
         address: currnetLocation,
-        addressTitle: "위치 위치",
+        addressTitle: "모여야 할 위치",
         content: {
           title: title,
           description: currnetLocation,
@@ -242,6 +242,7 @@
 ///////////////////////
    //카테고리(랜드마크) 검색
   function getCategory(){
+    localMap.setBounds(bounds);
     //등록된 장소가 1개 이하면 중앙 검색하지 않음
     if(markers.length<2){
       alert("중앙을 찾기에는 참여자가 적습니다.");
@@ -258,7 +259,7 @@
       //카테고리에 따라 위치 찾기
       // 장소 검색 객체를 생성합니다
       var ps = new daum.maps.services.Places(map);
-      ps.categorySearch(cat, placesSearchCB, {location:center,radius:2000});
+      ps.categorySearch(cat, placesSearchCB, {location:center,radius:1000});
     }
     else{
       searchCenter();
@@ -268,7 +269,6 @@
    //중심 위치의 좌표 저장 + 마커 등록
   function searchCenter(){
       //중심 마커 등록
-      localMap.setBounds(bounds);
       center = centerLocation;
       var markerImage = new daum.maps.MarkerImage("/img/marker.png", new daum.maps.Size(35,35))
       if(centerMarker!=undefined){
